@@ -1,0 +1,102 @@
+/* General Reset */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    color: #333;
+}
+
+/* Container */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Headings */
+h1, h2 {
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+/* Paragraph */
+p {
+    font-size: 18px;
+}
+
+/* Buttons */
+button,
+.submit-btn,
+.btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    margin-top: 15px;
+    display: inline-block;
+}
+
+button:hover,
+.submit-btn:hover,
+.btn:hover {
+    background-color: #218838;
+}
+
+/* Radio buttons */
+input[type="radio"] {
+    margin-right: 8px;
+    transform: scale(1.1);
+}
+
+/* Question Styling */
+label {
+    font-size: 16px;
+}
+
+/* Feedback Section */
+.correct {
+    color: green;
+}
+
+.incorrect {
+    color: red;
+}
+
+.feedback-box {
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+/* Result Box */
+.result-box {
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: inline-block;
+}
+
+/* Score Display */
+.score {
+    font-size: 32px;
+    font-weight: bold;
+    color: #007bff;
+    margin-top: 15px;
+}
+
+/* Feedback Message */
+.message {
+    margin-top: 15px;
+    font-size: 18px;
+    color: #444;
+}

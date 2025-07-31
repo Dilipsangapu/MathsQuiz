@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quiz Result</title>
+    <link rel="stylesheet" th:href="@{/quiz.css}">
+</head>
+<body>
+<div class="result-box">
+    <h1>🎉 Quiz Completed!</h1>
+    <p class="score">
+        Your Score: <span th:text="${score}"></span> / <span th:text="${total}"></span>
+    </p>
+
+    <div class="message"
+         th:switch="${score}">
+        <span th:case="* == ${total}">🏆 Perfect score! You're a quiz master!</span>
+        <span th:case="* >= ${total} * 0.7">👏 Great job! You passed with a good score.</span>
+        <span th:case="* >= ${total} * 0.4">👍 Not bad! Keep practicing to improve.</span>
+        <span th:case="* < ${total} * 0.4">📚 Don't worry! Try again to get better.</span>
+    </div>
+
+    <a href="/quiz-ui/start" class="btn">🔄 Try Again</a>
+</div>
+<form th:action="@{/quiz-ui/start}" method="get">
+    <button type="submit" class="btn">🔁 Start From First</button>
+</form>
+
+</body>
+</html>

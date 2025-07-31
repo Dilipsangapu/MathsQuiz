@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quiz Complete</title>
+    <link rel="stylesheet" th:href="@{/quiz.css}">
+</head>
+<body>
+<h1>🎉 Quiz Finished!</h1>
+<p>Your Final Score: <strong th:text="${finalScore}"></strong></p>
+<a href="/quiz-ui/start">Try Again</a>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quiz Question</title>
+    <link rel="stylesheet" th:href="@{/quiz.css}">
+</head>
+<body>
+<h2>Question [[${questionNumber}]]:</h2>
+
+<!-- Question Text -->
+<p th:text="${question.question}"></p>
+
+<!-- Feedback Section -->
+<div th:if="${showFeedback == true}">
+    <p><strong>Your Answer:</strong> <span th:text="${selectedAnswer}"></span></p>
+
+    <p>
+        <strong th:if="${isCorrect}" style="color: green;">✅ Correct!</strong>
+        <span th:if="${!isCorrect}" style="color: red;">
+            ❌ Incorrect.<br/>
+            Correct Answer: <strong th:text="${correctAnswer}"></strong>
+        </span>
+    </p>
+
+    <p><strong>Current Score:</strong> <span th:text="${score}"></span></p>
+    <hr/>
+
+    <!-- Proceed to next question -->
+    <form action="/quiz-ui/next" method="post">
+        <button type="submit">Next</button>
+    </form>
+</div>
+
+<!-- Answer Form -->
+<form action="/quiz-ui/answer" method="post" th:if="${showFeedback == false}">
+    <div th:each="opt : ${question.options}">
+        <input type="radio" name="selectedAnswer" th:value="${opt}" required />
+        <label th:text="${opt}"></label><br/>
+    </div>
+    <button type="submit">Submit</button>
+</form>
+<form th:action="@{/quiz-ui/start}" method="get">
+    <button type="submit" class="btn">🔁 Start From First</button>
+</form>
+
+</body>
+</html>
