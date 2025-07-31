@@ -80,31 +80,26 @@ public class QuizUIController {
 
         Question currentQuestion = questions.get(currentIndex);
         quizSession.getSelectedAnswers().add(selectedAnswer);  // ✅ Store the answer
-        quizSession.setCurrentIndex(currentIndex + 1);          // ✅ Move to next question
+
+        // ✅ Don't increment currentIndex here!
 
         // Check correctness
         boolean isCorrect = currentQuestion.getCorrectAnswer().equals(selectedAnswer);
-
         if (isCorrect) {
             quizSession.setScore(quizSession.getScore() + 1);
         }
-        int score = quizSession.getScore();
 
-        // Show feedback
         model.addAttribute("question", currentQuestion);
         model.addAttribute("selectedAnswer", selectedAnswer);
         model.addAttribute("correctAnswer", currentQuestion.getCorrectAnswer());
         model.addAttribute("isCorrect", isCorrect);
-        model.addAttribute("score", score);
-        model.addAttribute("questionNumber", currentIndex + 1);
-        model.addAttribute("showFeedback", true);  // show feedback section
-
-        if (quizSession.getCurrentIndex() >= questions.size()) {
-            return "redirect:/quiz-ui/result";
-        }
+        model.addAttribute("score", quizSession.getScore());
+        model.addAttribute("questionNumber", currentIndex + 1);  // ✅ accurate now
+        model.addAttribute("showFeedback", true);
 
         return "quiz-question";
     }
+
 
 
     // 2. Proceed to next question
@@ -114,16 +109,19 @@ public class QuizUIController {
 
         if (quizSession == null) return "redirect:/quiz-ui/start";
 
-        int nextIndex = quizSession.getCurrentIndex() + 1;
+        int currentIndex = quizSession.getCurrentIndex();
 
-        if (nextIndex >= quizSession.getQuestions().size()) {
+        // ✅ Increment index now, AFTER feedback is shown
+        currentIndex++;
+
+        if (currentIndex >= quizSession.getQuestions().size()) {
             return "redirect:/quiz-ui/result";
         }
 
-        quizSession.setCurrentIndex(nextIndex);
-        session.setAttribute("quizSession", quizSession);
+        quizSession.setCurrentIndex(currentIndex);
         return "redirect:/quiz-ui/question";
     }
+
 
 
 }
