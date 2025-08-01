@@ -1,362 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Quiz - Question [[${questionNumber}]]</title>
+    <title>Quiz Question</title>
     <link rel="stylesheet" th:href="@{/quiz.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        .quiz-progress {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-        
-        .quiz-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #28a745, #20c997);
-            border-radius: 10px;
-            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: progressGlow 2s ease-in-out infinite alternate;
-        }
-        
-        @keyframes progressGlow {
-            from { box-shadow: 0 0 5px rgba(40, 167, 69, 0.3); }
-            to { box-shadow: 0 0 15px rgba(40, 167, 69, 0.6); }
-        }
-        
-        .question-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .question-number {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            animation: questionBadge 0.6s ease-out;
-        }
-        
-        @keyframes questionBadge {
-            from {
-                opacity: 0;
-                transform: scale(0.8) translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-        
-        .feedback-section {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 25px 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            animation: feedbackSlide 0.6s ease-out;
-        }
-        
-        @keyframes feedbackSlide {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .feedback-answer {
-            font-size: 18px;
-            margin-bottom: 15px;
-            padding: 15px 20px;
-            border-radius: 12px;
-            background: rgba(102, 126, 234, 0.1);
-            border-left: 4px solid #667eea;
-        }
-        
-        .feedback-correct {
-            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1));
-            border-left: 4px solid #28a745;
-            color: #155724;
-            animation: correctPulse 0.8s ease;
-        }
-        
-        .feedback-incorrect {
-            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(255, 107, 107, 0.1));
-            border-left: 4px solid #dc3545;
-            color: #721c24;
-            animation: incorrectShake 0.8s ease;
-        }
-        
-        .score-display {
-            text-align: center;
-            font-size: 20px;
-            font-weight: 700;
-            padding: 20px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            border-radius: 15px;
-            margin: 20px 0;
-            animation: scoreShow 0.6s ease-out 0.3s both;
-        }
-        
-        @keyframes scoreShow {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        .separator {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
-            border: none;
-            margin: 30px 0;
-            border-radius: 2px;
-        }
-        
-        .form-container {
-            margin: 25px 0;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 30px;
-        }
-        
-        .btn-next {
-            background: linear-gradient(45deg, #28a745, #20c997);
-            padding: 15px 35px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 50px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-next::before {
-            content: '→';
-            position: absolute;
-            right: 20px;
-            transition: transform 0.3s ease;
-        }
-        
-        .btn-next:hover::before {
-            transform: translateX(5px);
-        }
-        
-        .btn-restart {
-            background: linear-gradient(45deg, #6c757d, #495057);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
-        }
-        
-        .btn-restart:hover {
-            background: linear-gradient(45deg, #5a6268, #343a40);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
-        }
-        
-        .icon {
-            display: inline-block;
-            margin-right: 8px;
-            font-size: 1.2em;
-            vertical-align: middle;
-        }
-        
-        /* Enhanced option layout for better visual hierarchy */
-        .option-item {
-            margin-bottom: 15px;
-            animation: optionSlide 0.4s ease-out;
-            animation-fill-mode: both;
-        }
-        
-        .option-item:nth-child(1) { animation-delay: 0.1s; }
-        .option-item:nth-child(2) { animation-delay: 0.2s; }
-        .option-item:nth-child(3) { animation-delay: 0.3s; }
-        .option-item:nth-child(4) { animation-delay: 0.4s; }
-        
-        @keyframes optionSlide {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        /* Mobile improvements */
-        @media (max-width: 768px) {
-            .button-group {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn-next, .btn-restart {
-                width: 100%;
-                max-width: 300px;
-            }
-            
-            .feedback-section {
-                padding: 20px;
-            }
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Progress Bar (you can calculate progress based on questionNumber) -->
-        <div class="quiz-progress">
-            <div class="quiz-progress-bar" th:style="'width: ' + ${(questionNumber * 100) / 10} + '%'"></div>
-        </div>
-        
-        <!-- Question Header -->
-        <div class="question-header">
-            <div class="question-number">
-                <span class="icon">❓</span>
-                Question [[${questionNumber}]]
-            </div>
-            <div class="question-container">
-                <div class="question-text" th:text="${question.question}"></div>
-            </div>
-        </div>
+<h2>Question [[${questionNumber}]]:</h2>
 
-        <!-- Feedback Section -->
-        <div th:if="${showFeedback == true}" class="feedback-section">
-            <div class="feedback-answer">
-                <strong><span class="icon">💭</span>Your Answer:</strong> 
-                <span th:text="${selectedAnswer}"></span>
-            </div>
-            
-            <div th:if="${isCorrect}" class="feedback-correct">
-                <strong><span class="icon">✅</span>Excellent! That's correct!</strong>
-                <p style="margin-top: 10px; font-size: 16px; opacity: 0.8;">Great job! You're doing amazing!</p>
-            </div>
-            
-            <div th:if="${!isCorrect}" class="feedback-incorrect">
-                <strong><span class="icon">❌</span>Not quite right.</strong><br/>
-                <div style="margin-top: 10px;">
-                    <strong>Correct Answer:</strong> <span th:text="${correctAnswer}"></span>
-                </div>
-                <p style="margin-top: 10px; font-size: 16px; opacity: 0.8;">Don't worry, keep learning!</p>
-            </div>
-            
-            <div class="score-display">
-                <span class="icon">🏆</span>
-                <strong>Current Score: </strong>
-                <span th:text="${score}" style="color: #667eea; font-size: 24px;"></span>
-            </div>
-            
-            <hr class="separator"/>
-            
-            <!-- Next Question Form -->
-            <form action="/quiz-ui/next" method="post" class="form-container">
-                <div class="button-group">
-                    <button type="submit" class="btn btn-next">
-                        Continue to Next Question
-                    </button>
-                </div>
-            </form>
-        </div>
+<!-- Question Text -->
+<p th:text="${question.question}"></p>
 
-        <!-- Answer Form -->
-        <div th:if="${showFeedback == false}">
-            <form action="/quiz-ui/answer" method="post" class="form-container">
-                <div class="options-container">
-                    <div th:each="opt, iterStat : ${question.options}" class="option-item">
-                        <label class="option-label">
-                            <input type="radio" name="selectedAnswer" th:value="${opt}" required class="option-radio"/>
-                            <div class="option-indicator" th:text="${#strings.charAt('ABCDEFGHIJ', iterStat.index)}"></div>
-                            <div class="option-text" th:text="${opt}"></div>
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="button-group">
-                    <button type="submit" class="btn submit-btn">
-                        <span class="icon">📝</span>
-                        Submit Answer
-                    </button>
-                </div>
-            </form>
-        </div>
+<!-- Feedback Section -->
+<div th:if="${showFeedback == true}">
+    <p><strong>Your Answer:</strong> <span th:text="${selectedAnswer}"></span></p>
 
-        <!-- Restart Button -->
-        <div class="button-group" style="margin-top: 40px;">
-            <form th:action="@{/quiz-ui/start}" method="get">
-                <button type="submit" class="btn-restart">
-                    <span class="icon">🔄</span>
-                    Start Over
-                </button>
-            </form>
-        </div>
+    <p>
+        <strong th:if="${isCorrect}" style="color: green;">✅ Correct!</strong>
+        <span th:if="${!isCorrect}" style="color: red;">
+            ❌ Incorrect.<br/>
+            Correct Answer: <strong th:text="${correctAnswer}"></strong>
+        </span>
+    </p>
+
+    <p><strong>Current Score:</strong> <span th:text="${score}"></span></p>
+    <hr/>
+
+    <!-- Proceed to next question -->
+    <form action="/quiz-ui/next" method="post">
+        <button type="submit">Next</button>
+    </form>
+</div>
+
+<!-- Answer Form -->
+<form action="/quiz-ui/answer" method="post" th:if="${showFeedback == false}">
+    <div th:each="opt : ${question.options}">
+        <input type="radio" name="selectedAnswer" th:value="${opt}" required />
+        <label th:text="${opt}"></label><br/>
     </div>
+    <button type="submit">Submit</button>
+</form>
+<form th:action="@{/quiz-ui/start}" method="get">
+    <button type="submit" class="btn">🔁 Start From First</button>
+</form>
 
-    <script>
-        // Add some interactive enhancements
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animate progress bar on load
-            const progressBar = document.querySelector('.quiz-progress-bar');
-            if (progressBar) {
-                setTimeout(() => {
-                    progressBar.style.width = progressBar.style.width;
-                }, 300);
-            }
-            
-            // Add click animations to radio buttons
-            const radioButtons = document.querySelectorAll('.option-radio');
-            radioButtons.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    // Remove previous selections
-                    document.querySelectorAll('.option-label').forEach(label => {
-                        label.classList.remove('selected');
-                    });
-                    
-                    // Add selection to current
-                    this.closest('.option-label').classList.add('selected');
-                });
-            });
-            
-            // Auto-focus on first option for keyboard navigation
-            const firstRadio = document.querySelector('.option-radio');
-            if (firstRadio) {
-                firstRadio.focus();
-            }
-        });
-    </script>
 </body>
 </html>
